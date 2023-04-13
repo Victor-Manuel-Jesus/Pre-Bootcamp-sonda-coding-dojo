@@ -1,0 +1,250 @@
+<html>
+	<head>
+		<title>NinjaMan</title>
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;900&display=swap');
+
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			.row {
+				line-height: 0;
+			}
+			.wall {
+				background-color: blue;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+			}
+			.sushi {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+				background-image: url('./img/sushi.png');
+				background-size: contain;
+			}
+			.onigiri {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+				background-image: url('./img/onigiri.png');
+				background-size: contain;
+			}
+			.blank {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+			}
+			#ninjaman {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+				background-image: url('./img/ninja.gif');
+				background-size: contain;
+				position: absolute;
+				left: 45px;
+				top: 40px;
+			}
+			#puntaje {
+				position: fixed;
+				color:	white;
+				font-size: 25px;
+				font-family: 'Roboto', sans-serif;
+				font-weight: 700;
+			}
+			#enemy_1 {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+				background-image: url('./img/bluey.gif');
+				background-size: contain;
+				position: absolute;
+				left: 145px;
+				top: 497px;
+			}
+			#enemy_2 {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+				background-image: url('./img/pinky.gif');
+				background-size: contain;
+				position: absolute;
+				left: 100px;
+				top: 497px;
+			}
+			#enemy_3 {
+				background-color: black;
+				height: 40px;
+				width: 40px;
+				display: inline-block;
+				background-image: url('./img/pumpky.gif');
+				background-size: contain;
+				position: absolute;
+				left: 190px;
+				top: 497px;
+			}
+		</style>
+	</head>
+<body>
+	<div id="puntaje">Puntaje:0</div>
+	<div id="world"></div>
+	<div id="ninjaman"></div>
+	<div id = "enemy_1"></div>
+	<div id = "enemy_2"></div>
+	<div id = "enemy_3"></div>
+
+	<script type="text/javascript">
+		function mundoAleatorio() {
+			var arrayWorld = [];
+			var array = [];
+			var min = 10;
+			var max = 100;
+			var total = Math.floor(Math.random() * (max - min) + min);
+			//primera muralla
+			for (var x = 0;x < 8; x++){
+				array.push(1);	
+			}
+			arrayWorld.push(array)
+			for (var row = 0;row < total; row++){
+				array = [];
+				min = 0;
+				max = 3;
+				var a = 1;
+				var b = Math.floor(Math.random() * (max - min) + min);
+				var c = Math.floor(Math.random() * (max - min) + min);
+				var d = Math.floor(Math.random() * (max - min) + min);
+				var e = Math.floor(Math.random() * (max - min) + min);
+				var f = Math.floor(Math.random() * (max - min) + min);
+				var g = Math.floor(Math.random() * (max - min) + min);
+				var h = 1;
+				array.push(a,b,c,d,e,f,g,h)
+				arrayWorld.push(array)
+			}
+			array = [];
+			for (var x = 0;x < 8; x++){
+				array.push(1);	
+			}
+			arrayWorld.push(array)			
+			return arrayWorld;
+		}
+		var newWorld = mundoAleatorio();
+
+		var world = [
+			[1,1,1,1,1],
+			[1,2,2,2,1],
+			[1,2,1,2,1],
+			[1,2,2,2,1],
+			[1,2,1,2,1],
+			[1,2,1,2,1],
+			[1,2,2,2,1],
+			[1,3,1,2,1],
+			[1,3,3,3,1],
+			[1,1,1,1,1],
+		];
+		var worldDict = {
+			0:'blank',
+			1:'wall',
+			2:'sushi',
+			3:'onigiri'
+		}
+		function dramWorld() {
+			var output = "";
+			for(var row = 0; row < newWorld.length; row++){
+				output += "<div class='row'>";
+				for(var x = 0; x < newWorld[row].length; x++){
+					output += "<div class ='" + worldDict[newWorld[row][x]] + "'></div>";
+				}
+				output +="</div>"
+			}
+			document.getElementById('world').innerHTML = output;
+		}
+		dramWorld();
+
+		var ninjaman = {
+			x: 1,
+			y:1
+		}
+		var enemies = {
+			x:1,
+			y:1
+		}
+		function moveEnemies() {
+			var bandera = false;
+			var mov = 0;
+			while(bandera != false) {
+				if(e.keyCode == 87){
+					if(newWorld[enemies.y + 1][enemies.x] !=1 ){
+						ninjaman.x--;
+						}
+				}
+				if(newWorld[enemies.y][enemies.x - 1] !=1 ){
+					enemies.x--;
+				}else if(newWorld[enemies.y -1][enemies.x] !=1 ){
+					enemies.y--;
+				}else if(newWorld[enemies.y][enemies.x + 1] !=1 ){
+					enemies.x++;
+				}else if(newWorld[enemies.y + 1][enemies.x] !=1 ){
+					enemies.y++;
+				}
+				newWorld[enemies.y][enemies.x] = 0;
+
+			}
+		}
+		moveEnemies();
+		
+		function drawNinja() {
+			document.getElementById('ninjaman').style.top = ninjaman.y*40 +"px";
+			document.getElementById('ninjaman').style.left = ninjaman.x*40 +"px";
+		}
+		drawNinja();
+
+		var puntaje = 0;
+		document.onkeydown = function(e) {
+			console.log(e);
+			if(e.keyCode == 37){
+				if(newWorld[ninjaman.y][ninjaman.x - 1] !=1 ){
+					ninjaman.x--;
+				}
+			}
+			if(e.keyCode == 38){
+				if(newWorld[ninjaman.y -1][ninjaman.x] !=1 ){
+					ninjaman.y--;
+				}
+			}
+			if(e.keyCode == 39){
+				if(newWorld[ninjaman.y][ninjaman.x + 1] !=1 ){
+					ninjaman.x++;
+				}
+			}
+			if(e.keyCode == 40){
+				if(newWorld[ninjaman.y + 1][ninjaman.x] !=1 ){
+					ninjaman.y++;
+				}
+			}
+			
+			//VALIDACION DE PUNTAJE
+			if(newWorld[ninjaman.y][ninjaman.x] == 2){
+				puntaje += 10;
+			}else if(newWorld[ninjaman.y][ninjaman.x] == 3){
+				puntaje+=5;
+			}else if(newWorld[ninjaman.y][ninjaman.x] == 0){
+				puntaje = puntaje
+			}
+
+			document.getElementById('puntaje').innerHTML ="Puntaje:"+puntaje;
+			newWorld[ninjaman.y][ninjaman.x] = 0;
+			drawNinja();
+			dramWorld();
+				
+		}
+	</script>	
+	
+</body>
+</html>
